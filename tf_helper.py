@@ -4,7 +4,7 @@ import datetime
 import zipfile
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import os 
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 # Create TensorBoard callback
 
