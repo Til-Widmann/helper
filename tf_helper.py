@@ -68,32 +68,28 @@ def plot_confusion_matrix(model, x_test, y_test):
     plt.show()
 
 def plot_loss_curves(history):
-    """
-    Returns seperate loss curves for training and validation metrics
-    Arguments:
-    history (model_history): history of the Learning process
-    Returns:
-    Plots of training/validation loss and accuracy metrics
-    """
+  """
+  Returns separate loss curves for training and validation metrics.
+  """ 
+  loss = history.history['loss']
+  val_loss = history.history['val_loss']
 
-    loss = history.history["loss"]
-    val_loss = history.history["val_loss"]
+  accuracy = history.history['accuracy']
+  val_accuracy = history.history['val_accuracy']
 
-    accuracy = history.history["accuracy"]
-    val_accuracy = history.history["val_accuracy"]
+  epochs = range(len(history.history['loss']))
 
-    epochs = len(history.history["loss"])
+  # Plot loss
+  plt.plot(epochs, loss, label='training_loss')
+  plt.plot(epochs, val_loss, label='val_loss')
+  plt.title('Loss')
+  plt.xlabel('Epochs')
+  plt.legend()
 
-    # Plott loss
-    plt.plot(epochs, loss, label="training loss")
-    plt.plot(epochs, val_loss, label="validation loss")
-    plt.title("Loss")
-    plt.xlabel("Epochs")
-    plt.legend()
-
-    # Plott accuracy
-    plt.plot(epochs, accuracy, label="training accuracy")
-    plt.plot(epochs, val_accuracy, label="validation accuracy")
-    plt.title("Accuracy")
-    plt.xlabel("Epochs")
-    plt.legend()
+  # Plot accuracy
+  plt.figure()
+  plt.plot(epochs, accuracy, label='training_accuracy')
+  plt.plot(epochs, val_accuracy, label='val_accuracy')
+  plt.title('Accuracy')
+  plt.xlabel('Epochs')
+  plt.legend()
