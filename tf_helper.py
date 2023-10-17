@@ -5,8 +5,8 @@ import zipfile
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import os 
 import matplotlib.pyplot as plt
-
-# Create TensorBoard callback
+import random
+import shutil
 
 def create_tensorboard_callback(dir_name, experiment_name):
   """
@@ -93,3 +93,52 @@ def plot_loss_curves(history):
   plt.title('Accuracy')
   plt.xlabel('Epochs')
   plt.legend()
+
+
+
+def split_and_move_data(source_dir, target_dir, split_ratio=0.75, subset_fraction=1.0):
+    """
+    Split and move a fraction of files from subdirectories in the source directory into training and testing sets.
+
+    Parameters:
+        source_dir (str): The path to the source directory containing subdirectories with data.
+        target_dir (str): The path to the target directory where training and testing data will be organized.
+        split_ratio (float, optional): The ratio of files to be placed in the training set. Default is 0.75 (75%).
+        subset_fraction (float, optional): The fraction of data to process. Default is 1.0 (process all data).
+
+    Returns:
+        None
+
+    Example:
+        source_directory = 'path_to_source_directory'
+        target_directory = 'path_to_target_directory'
+        split_ratio = 0.75  # 75% for training, 25% for testing
+        subset_fraction = 0.5  # Process only 50% of the data
+        split_and_move_data(source_directory, target_directory, split_ratio, subset_fraction)
+    """
+    # List all subdirectories in the source directory
+    subdirectories = [d for d in os.listdir(source_dir) if os.path.isdir(os.path.join(source_dir, d))]
+
+    for subdir in subdirectories:
+        subdir_path = os.path.join(source_dir, subdir)
+        files = os.listdir(subdir_path)
+        
+        # Calculate the number of files to move to the training set, considering the subset_fraction
+        num_files = len(files)
+        num_to_process = int(num_files * subset_fraction)
+        num_train = int(num_to_process * split_ratio)
+        
+        # Randomly shuffle the list of files
+        random.shuffle(files)
+        
+        # Split and move the files
+        for i, file in enumerate(files[:num_to_process]):
+            source_file = os.path.join(subdir_path, file)
+            if i < num_train:
+                target_file = os.path.join(target_dir, 'training', subdir, file)
+            else:
+                target_file = os.path.join(target_dir, 'testing', subdir, file)
+
+            os.makedirs(os.path.dirname(target_file), exist_ok=True)
+            shutil.copy(source_file, target_file)
+
