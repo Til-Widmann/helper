@@ -67,7 +67,7 @@ def plot_confusion_matrix(model, x_test, y_test):
     disp.plot()
     plt.show()
 
-def plot_loss_curves(history, ):
+def plot_loss_curves(history):
     """
     Returns seperate loss curves for training and validation metrics
     Arguments:
@@ -86,14 +86,14 @@ def plot_loss_curves(history, ):
 
     # Plott loss
     plt.plot(epochs, loss, label="training loss")
-    plt.plot(epochs,val_loss, label="validation loss")
+    plt.plot(epochs, val_loss, label="validation loss")
     plt.title("Loss")
     plt.xlabel("Epochs")
     plt.legend()
 
     # Plott accuracy
     plt.plot(epochs, accuracy, label="training accuracy")
-    plt.plot(epochs, accuracy, label="validation accuracy")
+    plt.plot(epochs, val_accuracy, label="validation accuracy")
     plt.title("Accuracy")
     plt.xlabel("Epochs")
     plt.legend()
