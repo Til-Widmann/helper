@@ -142,3 +142,13 @@ def split_and_move_data(source_dir, target_dir, split_ratio=0.75, subset_fractio
             os.makedirs(os.path.dirname(target_file), exist_ok=True)
             shutil.copy(source_file, target_file)
 
+def get_random_examples(train_dataset):
+  class_names = train_dataset.class_names
+
+  plt.figure(figsize=(10, 10))
+  for images, labels in train_dataset.take(1):
+    for i in range(9):
+      ax = plt.subplot(3, 3, i + 1)
+      plt.imshow(images[i].numpy().astype("uint8"))
+      plt.title(class_names[labels[i]])
+      plt.axis("off")
