@@ -19,7 +19,7 @@ def create_tensorboard_callback(dir_name, experiment_name):
   as a 'callbacks' parameter
   """
 
-  log_dir = dir_name + "/" + experiment_name + "/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+  log_dir = dir_name + "/" + experiment_name + "/" + datetime.datetime.now().strftime("%Y%m%D-%H%M%S")
   
   tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir)
   print(f"Saving TensorBoard log files to: {log_dir}")
@@ -187,3 +187,50 @@ def plot_fine_tuning_epochs(original_history, new_history, initial_epochs):
   plt.plot([initial_epochs-1, initial_epochs-1], plt.ylim(), label="Start fine tuning")
   plt.legend(loc="lower right")
   plt.title("Training and Validation Loss")
+
+def unfreeze_layers(base_model , num):
+  """
+  Unfreezes specified number of layers for fine-tuning
+  """
+  base_model.trainable = True
+
+  for layer in base_model.layers[:-num]:
+    layer.trainable = False
+  return base_model
+
+def predict_images(test_data, model):
+   # plot 4 random images
+  x, y = train_data.next()
+
+  fig, ax = plt.subplots(2, 2)
+
+  # 'fig' is the whole figure, and 'ax' is an array of axes objects
+  fig.suptitle("Multiple Examples")
+
+  ax[0, 0].axis(False)
+  ax[0, 1].axis(False)
+  ax[1, 0].axis(False)
+  ax[1, 1].axis(False)
+
+  # You can access individual subplots using indexing
+  ax[0, 0].imshow(x[0])
+  ax[0, 1].imshow(x[1])
+  ax[1, 0].imshow(x[2])
+  ax[1, 1].imshow(x[3])
+
+  # make predicitons
+  p = [False] * 4
+  for i in range(4):
+    if model.predict(x[i]) == y[i]:
+       p[i] = "g"
+    else:
+       p[i] = "r"
+    p[i] = model.predict(x[i]) == y[i]
+
+  # Customize each subplot as needed
+  ax[0, 0].set_title(label_names[np.argmax(y[0])], color=p[0])
+  ax[0, 1].set_title(label_names[np.argmax(y[1])], color=p[1])
+  ax[1, 0].set_title(label_names[np.argmax(y[2])], color=p[2])
+  ax[1, 1].set_title(label_names[np.argmax(y[3])], color=p[3])
+
+  plt.show()
